@@ -26,17 +26,28 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Install SSH key
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+      # - name: Install SSH key
+      #   run: |
+      #     install -m 600 -D /dev/null ~/.ssh/id_rsa
+      #     echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
+      #     ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Connect and deploy using rsync
-        run: |
-          # rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete dist/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 
-          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
+      # - name: Connect and deploy using rsync
+      #   run: |
+      #     # rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete dist/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}
+      #     ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
 
-      - name: Remove SSH key
-        if: always()
-        run: rm ~/.ssh/id_rsa
+      # - name: Remove SSH key
+      #   if: always()
+      #   run: rm ~/.ssh/id_rsa
+
+      - name: Testing the deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIV_KEY }}
+
+          script: |
+            ls -la
+            echo "Nice! Deployment was successful!"
