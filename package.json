@@ -16,7 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "dotenv-cli -- node dist/index.js",
     "build": "tsc",
-    "sync-env": "npx dotenv-cli -e .env.github-sync -- github-secret-dotenv"
+    "sync-env": "node sync.js"
   },
   "keywords": [],
   "author": "",

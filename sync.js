@@ -1,7 +1,7 @@
 const { readAndUpload, createSecretUpdater } = require('github-secret-dotenv');
 const fs = require('fs');
 const dotenv = require('dotenv').config({
-  path: './.env.local',
+  path: './.env.github-sync',
 });
 
 const config = {
