@@ -1,0 +1,60 @@
+name: Deploy to cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    environment: production
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: .
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIV_KEY }}
+          ARGS: '-rltgoDzvO -i --delete'
+          SOURCE: 'dist/'
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }} # /home/opc/discord-bot
+          EXCLUDE: '/dist/, /node_modules/'
+
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build
+  #         path: .
+
+  #     - name: Deploy to cloud
+  #       run: |
+  #         echo "Deploying to cloud"
+  #         # Add your deployment script here
+  #         # Example: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
