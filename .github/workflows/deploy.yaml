@@ -43,18 +43,14 @@ jobs:
       # DEBUG
       - name: Debug
         run: |
-          echo ${{ secrets.REMOTE_HOST }}
-          echo ${{ secrets.REMOTE_USER }}
-          echo ${{ secrets.SSH_PRIV_KEY }}
-          # echo the length of each
-          echo Remote host length:
-          echo ${{ secrets.REMOTE_HOST }} | wc -c
-
-          echo Remote user length:
-          echo ${{ secrets.REMOTE_USER }} | wc -c
-
-          echo SSH key length:
-          echo ${{ secrets.SSH_PRIV_KEY }} | wc -c
+          echo ${{ secrets.REMOTE_HOST }} > test.txt
+          echo ${{ secrets.REMOTE_USER }} >> test.txt
+          echo ${{ secrets.SSH_PRIV_KEY }}  >> test.txt
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test
+          path: test.txt
 
       - name: Testing the deployment
         uses: appleboy/ssh-action@master
