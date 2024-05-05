@@ -26,6 +26,9 @@ jobs:
 
       - name: Install SSH key
         run: |
+          # allow environment variables to be passed to the remote server
+          echo "Allowing environment variables to be passed to the remote server"
+          echo "AcceptEnv *" | sudo tee -a /etc/ssh/sshd_config
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
@@ -38,10 +41,13 @@ jobs:
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude 'node_modules' --delete . ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
 
       - name: Install missing dependencies
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && npm install"
 
       - name: Start the server
+
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && pm2 start npm --name bot -- start"
       - name: Remove SSH key
