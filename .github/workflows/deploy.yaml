@@ -7,8 +7,6 @@ on:
 
 jobs:
   build:
-    environment: production
-
     runs-on: ubuntu-latest
 
     steps:
@@ -41,13 +39,13 @@ jobs:
       #   if: always()
       #   run: rm ~/.ssh/id_rsa
 
-      # - name: Testing the deployment
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.REMOTE_HOST }}
-      #     username: ${{ secrets.REMOTE_USER }}
-      #     key: ${{ secrets.SSH_PRIV_KEY }}
+      - name: Testing the deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIV_KEY }}
 
-      #     script: |
-      #       ls -la
-      #       echo "Nice! Deployment was successful!"
+          script: |
+            ls -la
+            echo "Nice! Deployment was successful!"
