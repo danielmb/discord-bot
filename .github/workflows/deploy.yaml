@@ -32,10 +32,10 @@ jobs:
       #     echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
       #     ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
-      # - name: Connect and deploy using rsync
-      #   run: |
       #     # rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete dist/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}
-      #     ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
+      - name: Connect and deploy using rsync
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
 
       # - name: Remove SSH key
       #   if: always()
