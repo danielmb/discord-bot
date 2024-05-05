@@ -33,8 +33,16 @@ jobs:
       - name: Connect and deploy using rsync
         run: |
           # ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete dist/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
+          # run npm install after rsync finished at remote server
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && npm install"
 
+      - name: Install missing dependencies
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && npm install"
+
+      - name: Start the server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && pm2 start npm --name bot -- start"
       - name: Remove SSH key
         if: always()
         run: rm ~/.ssh/id_rsa
