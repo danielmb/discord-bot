@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test
-          path: *.txt
+          path: '*.txt'
 
       - name: Testing the deployment
         uses: appleboy/ssh-action@master
