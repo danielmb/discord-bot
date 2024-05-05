@@ -40,7 +40,6 @@ jobs:
       # - name: Remove SSH key
       #   if: always()
       #   run: rm ~/.ssh/id_rsa
-      # DEBUG
 
       - name: Testing the deployment
         uses: appleboy/ssh-action@master
