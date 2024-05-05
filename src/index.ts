@@ -20,6 +20,6 @@ client.on('messageCreate', (message) => {
   const command = message.content.split(' ')[0];
 
   if (command === '!test') {
-    message.reply('Hello, world!');
+    message.reply('Hello, world!!');
   }
 });
