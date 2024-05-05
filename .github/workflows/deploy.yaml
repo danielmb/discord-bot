@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    environment: production
+    environment: Production
 
     runs-on: ubuntu-latest
 
@@ -31,11 +31,10 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
-      - name: Connect and deploy
-        run: |
-          rsync -r --delete-after --quiet $GITHUB_WORKSPACE/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
 
-      # clean up
+      - name: Connect and deploy using rsync
+        run: |
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete dist/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
 
       - name: Remove SSH key
         if: always()
