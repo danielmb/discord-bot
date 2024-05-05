@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    environment: Production
+    environment: production
 
     runs-on: ubuntu-latest
 
@@ -40,6 +40,21 @@ jobs:
       # - name: Remove SSH key
       #   if: always()
       #   run: rm ~/.ssh/id_rsa
+      # DEBUG
+      - name: Debug
+        run: |
+          echo ${{ secrets.REMOTE_HOST }}
+          echo ${{ secrets.REMOTE_USER }}
+          echo ${{ secrets.SSH_PRIV_KEY }}
+          # echo the length of each
+          echo Remote host length:
+          echo ${{ secrets.REMOTE_HOST }} | wc -c
+
+          echo Remote user length:
+          echo ${{ secrets.REMOTE_USER }} | wc -c
+
+          echo SSH key length:
+          echo ${{ secrets.SSH_PRIV_KEY }} | wc -c
 
       - name: Testing the deployment
         uses: appleboy/ssh-action@master
