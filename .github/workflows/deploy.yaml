@@ -41,7 +41,14 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }} # /home/opc/discord-bot
           EXCLUDE: '/dist/, /node_modules/'
+          SCRIPT_BEFORE: |
+            whoami
+            ls -al
 
+          SCRIPT_AFTER: |
+            whoami
+            ls -al
+            echo $RSYNC_STDOUT
   # deploy:
   #   needs: build
   #   runs-on: ubuntu-latest
