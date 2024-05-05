@@ -26,42 +26,17 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: .
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIV_KEY }}
-          ARGS: '-rltgoDzvO -i --delete'
-          SOURCE: './'
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.REMOTE_TARGET }} # /home/opc/discord-bot
-          EXCLUDE: '/dist/, /node_modules/'
-          SCRIPT_BEFORE: |
-            whoami
-            ls -al
+      - name: Install SSH key
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+      - name: Connect and deploy
+        run: |
+          rsync -r --delete-after --quiet $GITHUB_WORKSPACE/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
 
-          SCRIPT_AFTER: |
-            whoami
-            ls -al
-            echo $RSYNC_STDOUT
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
+      # clean up
 
-  #   steps:
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: build
-  #         path: .
-
-  #     - name: Deploy to cloud
-  #       run: |
-  #         echo "Deploying to cloud"
-  #         # Add your deployment script here
-  #         # Example: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Remove SSH key
+        if: always()
+        run: rm ~/.ssh/id_rsa
