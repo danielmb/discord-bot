@@ -33,9 +33,9 @@ jobs:
       #     ssh-keyscan -t rsa ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
       #     # rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete dist/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}x1
-      - name: Connect and deploy using rsync
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
+      # - name: Connect and deploy using rsync
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "ls -la"
 
       # - name: Remove SSH key
       #   if: always()
