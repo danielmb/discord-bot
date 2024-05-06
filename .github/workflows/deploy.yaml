@@ -56,7 +56,7 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && pm2 startOrRestart ecosystem.config.js"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && pm2 startOrRestart ecosystem.config.json"
       - name: Remove SSH key
         if: always()
         run: rm ~/.ssh/id_rsa
