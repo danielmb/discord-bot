@@ -1,25 +1,9 @@
-import { Client, GatewayIntentBits } from 'discord.js';
+import 'reflect-metadata';
+import * as dotenv from 'dotenv';
+import { Container } from 'typedi';
+import { Client } from './Client';
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMessageReactions,
-  ],
-});
+dotenv.config();
 
-client.login(process.env.DISCORD_TOKEN);
-
-client.on('ready', () => {
-  console.log(`Logged in as ${client?.user?.tag}`);
-});
-
-client.on('messageCreate', (message) => {
-  if (message.author.bot) return;
-
-  const command = message.content.split(' ')[0];
-
-  if (command === '!test') {
-    message.reply('Hello, world!!');
-  }
-});
+// Initialize the Client using the IoC.
+Container.get<Client>(Client);

@@ -24,6 +24,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: deploy discord commands
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+        run: npm run discord:deploy
+
       - name: Install SSH key
         run: |
           # allow environment variables to be passed to the remote server

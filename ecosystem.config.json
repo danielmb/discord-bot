@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/pm2-ecosystem",
+  "apps": [
+    {
+      "name": "app",
+      "script": "dist/index.js"
+    }
+  ]
+}
